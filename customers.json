@@ -1,0 +1,7 @@
+{ "customers":[
+    { "name": "Jonh",
+      "address": "R. Tibúrcio Cavalcante, 1947 - Aldeota, Fortaleza - CE" },
+    { "name": "Steve",
+      "address": "R. Joaquim Nabuco, 2424 - Dionísio Torres, Fortaleza - CE" }
+  ]
+}
