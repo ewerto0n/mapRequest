@@ -45,8 +45,8 @@
     </nav>
 
     <div class="input-group">
-        <span class="input-group-addon" id="name">Nome do Cliente</span>
-        <input type="text" class="form-control" placeholder="Nome do Cliente">
+        <span class="input-group-addon">Nome do Cliente</span>
+        <input type="text" class="form-control" id="name" placeholder="Nome do Cliente" />
     </div>
 
     <div id="map"></div>
@@ -54,6 +54,7 @@
     <script>
       // GOOGLE API MAPS //
       var myLatlng = {lat: -3.7421681, lng: -38.50189};
+      
       function initMap() {
         var directionsService = new google.maps.DirectionsService;
         var directionsDisplay = new google.maps.DirectionsRenderer;
@@ -64,8 +65,15 @@
         directionsDisplay.setMap(map);
       }
       // CUSTOMERS JSON //
-      $.getJSON("customers.json", "JSONP", function() {
-        console.log("success");
+      $('#name').keyup(function() {
+        var customer = $(this).val().toUpperCase();
+          $.getJSON("customers.json", function(data) {
+            $.each(data.customers, function(key, value) {
+              if(value.name.toUpperCase().indexOf(customer) > -1) {
+                
+              };
+            });
+          });
       });
 
     </script>
