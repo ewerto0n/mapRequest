@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <title>Directions service</title>
+    <title>Sistema PDV</title>
     <!-- Jquery minified -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <!-- Latest compiled and minified CSS -->
@@ -23,18 +23,28 @@
         padding: 0;    
       }
       #map {
-        height: 50%;
-        width: 45%;
+        height: 100%;
+        width: 30%;
         float: right;
+        border: solid white;
       }
       h3 {
         color: white;
         text-align:  center;
       }
-      .input-group{
-        margin-top: 10px;
-        width: 50%;
+      #container{
+        height: 40%;
+        width: 100%;
+      }
+      .panel .panel-heading {
+        background: #424242;
+      }
+      #main {
         float: left;
+        margin-top: 2%;
+      }
+      #img {
+        border: 5px solid white;
       }
     </style>
   </head>
@@ -44,17 +54,78 @@
       <h3>Sistema PDV</h3>
     </nav>
 
-    <div class="input-group">
-        <span class="input-group-addon">Nome do Cliente</span>
-        <input type="text" class="form-control" id="name" placeholder="Nome do Cliente" />
+    <div class="container" id="container">
+
+    <div id="main">
+      <form class="form-inline" id="customer">
+        <div class="form-group">
+          <label for="cliente">Cliente :</label>
+          <select id="select" class="form-control">
+            <option>Selecione</option>
+          </select>
+            <label for="address">Endereço :</label>
+            <input type="text" id="address" placeholder="Endereço do cliente" disabled class="form-control" />
+        </div>
+      </form>
+
+      <hr />
+
+      <form class="form-inline" id="itens">
+          <div class="form-group">
+            <input type="text" id="id" placeholder="Código" class="form-control" />
+          </div>
+      
+          <div class="form-group">
+            <input type="text" id="descricao" placeholder="Descrição" disabled class="form-control" />
+          </div>
+          
+          <div class="form-group">
+              <input type="text" id="valor" placeholder="Valor" disabled class="form-control" />
+          </div>
+    
+          <div class="form-group">
+            <input type="number" id="quantidade" placeholder="Quantidade" class="form-control" />
+          </div>
+    
+          <button type="button" class="btn btn-default">+</button>
+        </form>
+
+        <div class="form-group">
+            <img src="" id="img" class="img-responsive" />
+        </div>
+
+      </div>
+
+      <div id="map"></div>
+
     </div>
 
-    <div id="map"></div>
+    <div class="panel panel-default">
+      <div class="panel-heading"><h3>Produtos</h3></div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>Quantidade</th>
+            <th>Valor</th>
+            <th>Excluir</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+
+          </tr>  
+        </tbody>
+      </table>
+    </div>
+
 
     <script>
       // GOOGLE API MAPS //
       var myLatlng = {lat: -3.7421681, lng: -38.50189};
-
+      
       function initMap() {
         var directionsService = new google.maps.DirectionsService;
         var directionsDisplay = new google.maps.DirectionsRenderer;
@@ -65,19 +136,43 @@
         directionsDisplay.setMap(map);
       }
       // CUSTOMERS JSON //
-      $('#name').keyup(function() {
-        var customer = $(this).val().toUpperCase();
-          $.getJSON("customers.json", function(data) {
-            $.each(data.customers, function(key, value) {
-              if(value.name.toUpperCase().indexOf(customer) > -1) {
-                
-              };
-            });
+      $.getJSON("customers.json", function(data) {
+        $.each(data.customers, function(key, value) {
+          $('#select').append('<option>'+ value.name +'</option>')     
+          $('#select').change(function(){
+            if(value.name == $('#select').val())
+            $('#address').val(value.address);
           });
+        });
+      });
+
+      // ITENS JSON //
+      $('#id').focusout(function itens(){
+        var id = $('#id').val();
+        $.getJSON("itens.json", function(data) {
+          var item;
+          $.each(data.itens, function(key, value) {
+            if(value.id == id) {
+              item = value;
+              return false;
+            }
+          });
+
+        if (item != undefined) {
+          $('#descricao').val(item.name);
+          $('#valor').val(item.value);
+          $('#img').attr("src", item.imagem);
+          $('#quantidade').focus();
+        } else {
+          $('#descricao').val('');
+          alert('Não existe produto com esse código!');
+        }
+
+        });
       });
 
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=KEY_YOUR&&libraries=geometry,places&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1p5sg8lJkUqB7TbPKKFrCQS78rm-MMas&&libraries=geometry,places&callback=initMap"
     async defer></script>
   </body>
 </html>

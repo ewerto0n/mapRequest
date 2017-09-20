@@ -1,0 +1,34 @@
+{ "itens":
+  [
+    {
+      "id": 120,
+      "name": "Pen driver Sandisk",
+      "value": 35,
+      "imagem": "https://images-shoptime.b2w.io/produtos/01/00/item/111848/8/111848856P1.jpg"
+    },
+    {
+      "id": 110,
+      "name": "Pen driver Duracel",
+      "value": 37.5,
+      "imagem": "https://static.wmobjects.com.br/imgres/arquivos/ids/2680715-150-150/pen-drive-32gb-duracell.jpg"
+    },
+    {
+      "id": 210,
+      "name": "Pacote de DVD",
+      "value": 75.6,
+      "imagem": "https://images-americanas.b2w.io/produtos/01/00/item/15009/4/15009436P1.jpg"
+    },
+    {
+      "id": 310,
+      "name": "Caneta espiã",
+      "value": 235.6,
+      "imagem": "http://i110.twenga.com/fotografia/caneta-espia/caneta-espia-4gb-tp_8597535497100398296b.jpg"
+    },  
+    {
+      "id": 320,
+      "name": "Lapis cryon",
+      "value": 7.5,
+      "imagem": "https://images.pricemestatic.com/Images/RetailerProductImages/StRetailer857/0071496876_ms.jpg"
+    }
+  ]
+}
