@@ -28,7 +28,7 @@
         float: right;
         border: solid white;
       }
-      h3 {
+      div div h3 {
         color: white;
         text-align:  center;
       }
@@ -46,12 +46,25 @@
       #img {
         border: 5px solid white;
       }
+      td, th {
+        padding: 15px;
+      }
+      nav div h3{
+        float: right;
+      }
+      .delete{
+        cursor: pointer;
+      }
+      #sistema{
+        text-align: center;
+        color: white;
+      }
     </style>
   </head>
   <body>
     
     <nav class="nav navbar-inverse">
-      <h3>Sistema PDV</h3>
+      <h3 id="sistema">Sistema PDV</h3>
     </nav>
 
     <div class="container" id="container">
@@ -87,7 +100,7 @@
             <input type="number" id="quantidade" placeholder="Quantidade" class="form-control" />
           </div>
     
-          <button type="button" class="btn btn-default">+</button>
+          <button type="button" class="btn btn-default" id="add">+</button>
         </form>
 
         <div class="form-group">
@@ -113,19 +126,22 @@
             <th>Excluir</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
+        <tbody id="itemtable">
 
-          </tr>  
         </tbody>
       </table>
     </div>
 
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+          <h3>Preço total :<span id="total">0</span></h3>
+        </div>
+      </nav>
 
     <script>
       // GOOGLE API MAPS //
       var myLatlng = {lat: -3.7421681, lng: -38.50189};
-      
+
       function initMap() {
         var directionsService = new google.maps.DirectionsService;
         var directionsDisplay = new google.maps.DirectionsRenderer;
@@ -134,7 +150,29 @@
           center: myLatlng
         });
         directionsDisplay.setMap(map);
+
+        var onChangeHandler = function() {
+          calculateAndDisplayRoute(directionsService, directionsDisplay);
+        };
+        document.getElementById('select').addEventListener('change', onChangeHandler);
       }
+
+      function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        if(document.getElementById('select').value != 'Selecione'){
+        directionsService.route({
+          origin: myLatlng,
+          destination: document.getElementById('address').value,
+          travelMode: 'DRIVING'
+        }, function(response, status) {
+          if (status === 'OK') {
+            directionsDisplay.setDirections(response);
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+        }
+      }
+
       // CUSTOMERS JSON //
       $.getJSON("customers.json", function(data) {
         $.each(data.customers, function(key, value) {
@@ -149,28 +187,64 @@
       // ITENS JSON //
       $('#id').focusout(function itens(){
         var id = $('#id').val();
-        $.getJSON("itens.json", function(data) {
-          var item;
-          $.each(data.itens, function(key, value) {
-            if(value.id == id) {
-              item = value;
-              return false;
-            }
+        if(id != '' && id != undefined){
+          $.getJSON("itens.json", function(data) {
+            var item;
+            $.each(data.itens, function(key, value) {
+              if(value.id == id) {
+                item = value;
+                return false;
+              }
+            });
+
+          if (item != undefined) {
+            $('#descricao').val(item.name);
+            $('#valor').val(item.value);
+            $('#img').attr("src", item.imagem);
+            $('#quantidade').focus();
+          } else {
+            $('#descricao').val('');
+            alert('Não existe produto com esse código!');
+          }
+
           });
-
-        if (item != undefined) {
-          $('#descricao').val(item.name);
-          $('#valor').val(item.value);
-          $('#img').attr("src", item.imagem);
-          $('#quantidade').focus();
-        } else {
-          $('#descricao').val('');
-          alert('Não existe produto com esse código!');
         }
-
-        });
       });
 
+      // ADD PRODUCT //
+      $('#add').on('click', function(){
+        var id = $('#id').val();
+        var item = $('#descricao').val();
+        var price = $('#valor').val();
+        var qtd = $('#quantidade').val();
+        var totalitem = parseFloat(qtd * price);
+        if(item != '' && item != undefined){
+          $('#itemtable').append(
+            '<tr><th scope="row">' + id + '</th><td>'
+            + item + '</td><td>' + qtd + '</td><td class="price">'
+            + totalitem + '</td><td onclick="excluir(this)">X</td></tr>'
+          );
+          addPrice(totalitem);
+          totalitem = "";
+          $('#id').val("");
+          $('#descricao').val("");
+          $('#valor').val("");
+          $('#quantidade').val("");
+        }
+      });
+
+      function addPrice(price) {
+        var total = parseFloat($('#total').text()) + price;
+        $('#total').text(total);
+      };
+
+      // DELETE ITEM //
+      function excluir(event){
+        var price = $(event).parent().children('.price').text();
+        var total = parseFloat($('#total').text()) - parseFloat(price);
+        $('#total').text(total);
+        $(event).parent().remove();
+      };
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1p5sg8lJkUqB7TbPKKFrCQS78rm-MMas&&libraries=geometry,places&callback=initMap"
     async defer></script>
