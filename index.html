@@ -44,7 +44,8 @@
         margin-top: 2%;
       }
       #img {
-        border: 5px solid white;
+        border: 10px solid white;
+		height: 100px;
       }
       td, th {
         padding: 15px;
@@ -141,7 +142,7 @@
     <script>
       // GOOGLE API MAPS //
       var myLatlng = {lat: -3.7421681, lng: -38.50189};
-
+      var address;
       function initMap() {
         var directionsService = new google.maps.DirectionsService;
         var directionsDisplay = new google.maps.DirectionsRenderer;
@@ -154,11 +155,10 @@
         var onChangeHandler = function() {
           calculateAndDisplayRoute(directionsService, directionsDisplay);
         };
-        document.getElementById('select').addEventListener('change', onChangeHandler);
+		  document.getElementById('select').addEventListener('focusout', onChangeHandler);
       }
 
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-        if(document.getElementById('select').value != 'Selecione'){
         directionsService.route({
           origin: myLatlng,
           destination: document.getElementById('address').value,
@@ -170,17 +170,17 @@
             window.alert('Directions request failed due to ' + status);
           }
         });
-        }
+        
       }
 
       // CUSTOMERS JSON //
       $.getJSON("customers.json", function(data) {
         $.each(data.customers, function(key, value) {
           $('#select').append('<option>'+ value.name +'</option>')     
-          $('#select').change(function(){
-            if(value.name == $('#select').val())
-            $('#address').val(value.address);
-          });
+            $('#select').change(function(){
+              if(value.name == $('#select').val())
+              $('#address').val(value.address);
+            });
         });
       });
 
@@ -230,6 +230,7 @@
           $('#descricao').val("");
           $('#valor').val("");
           $('#quantidade').val("");
+		  $('#img').attr("src", "");
         }
       });
 
