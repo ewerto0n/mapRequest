@@ -20,7 +20,7 @@
         height: 100%;
         width: 100%;
         margin: 0;
-        padding: 0;    
+        padding: 0;
       }
       #map {
         height: 100%;
@@ -63,7 +63,7 @@
     </style>
   </head>
   <body>
-    
+
     <nav class="nav navbar-inverse">
       <h3 id="sistema">Sistema PDV</h3>
     </nav>
@@ -88,19 +88,19 @@
           <div class="form-group">
             <input type="text" id="id" placeholder="Código" class="form-control" />
           </div>
-      
+
           <div class="form-group">
             <input type="text" id="descricao" placeholder="Descrição" disabled class="form-control" />
           </div>
-          
+
           <div class="form-group">
               <input type="text" id="valor" placeholder="Valor" disabled class="form-control" />
           </div>
-    
+
           <div class="form-group">
             <input type="number" id="quantidade" placeholder="Quantidade" class="form-control" />
           </div>
-    
+
           <button type="button" class="btn btn-default" id="add">+</button>
         </form>
 
@@ -170,13 +170,13 @@
             window.alert('Directions request failed due to ' + status);
           }
         });
-        
+
       }
 
       // CUSTOMERS JSON //
       $.getJSON("customers.json", function(data) {
         $.each(data.customers, function(key, value) {
-          $('#select').append('<option>'+ value.name +'</option>')     
+          $('#select').append('<option>'+ value.name +'</option>')
             $('#select').change(function(){
               if(value.name == $('#select').val())
               $('#address').val(value.address);
@@ -222,7 +222,7 @@
           $('#itemtable').append(
             '<tr><th scope="row">' + id + '</th><td>'
             + item + '</td><td>' + qtd + '</td><td class="price">'
-            + totalitem + '</td><td onclick="excluir(this)">X</td></tr>'
+            + totalitem + '</td><td class="delete" onclick="excluir(this)">X</td></tr>'
           );
           addPrice(totalitem);
           totalitem = "";
